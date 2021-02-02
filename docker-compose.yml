@@ -1,0 +1,51 @@
+version: '3'
+services:
+
+  # Oracle connects to ETH1 and ETH2 nodes
+  # oracle:
+  #  name: stakewise-oracle
+  #  image: stakewiselabs/oracle:latest
+  #  env_file:
+  #   - .oracle-settings.env
+  #  networks:
+  #    - internal
+
+  # ETH2 self-hosted node that stores the data in $HOME/eth2
+  # Based on https://github.com/stereum-dev/ethereum2-docker-compose/blob/master/compose-examples/prysm-only/docker-compose.yaml
+  beacon:
+    container_name: eth2-beacon
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
+    restart: always
+    hostname: beacon-chain
+    command: "--accept-terms-of-use --http-web3provider ${HTTP_WEB3_PROVIDER}"
+    ports:
+      - 127.0.0.1:4000:4000
+      # Beacon node connects to global P2P
+      - 13000:13000/tcp
+      # Beacon node connects to global P2P (secondary)
+      - 12000:12000/udp
+    volumes:
+      - ./beacon.yml:/config/beacon.yml:ro
+      - ./data:/data
+
+  # Validator web UI is exposed at localhost:7500
+  # validator:
+  #  container_name: eth2-validator
+  #  image: gcr.io/prysmaticlabs/prysm/validator:latest
+  #  restart: on-failure
+  #  hostname: validator
+  #  depends_on:
+  #    - beacon
+  #  command: --config-file=/config/validator.yaml
+  #  ports:
+  #    - 127.0.0.1:7500:7500/tcp # web-ui
+  #  volumes:
+  #    - ./config/prysm/validator.yaml:/config/validator.yaml:ro
+  #    - ./data/prysm/validator:/data
+
+networks:
+  external:
+    internal: false
+  internal:
+    internal: true
+
