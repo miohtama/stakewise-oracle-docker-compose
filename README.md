@@ -63,6 +63,26 @@ You get a block number as hex in the reply:
 {"jsonrpc":"2.0","id":1,"result":"0xb3cf53"}%
 ```
 
+### Test ETH1 webocket
+
+Use wscat:
+
+```sh
+wscat -c ${WEB3_WS_ENDPOINT}
+```
+
+After it is connected, test with a gas price RPC call:
+
+```
+{"jsonrpc":  "2.0", "id": 0, "method":  "eth_gasPrice"}
+```
+
+You should get:
+
+```
+{"jsonrpc":"2.0","result":"0x33ebd5f600","id":0}
+```
+
 ### Test Beacon node
 
 Test that Beacon node starts:
