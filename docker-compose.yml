@@ -17,9 +17,12 @@ services:
     image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
     restart: always
     hostname: beacon-chain
-    command: "--accept-terms-of-use --http-web3provider ${HTTP_WEB3_PROVIDER}"
+    command: "--http-web3provider ${WEB3_WS_ENDPOINT} --config-file=/config/beacon.yml"
     ports:
+      # gRPC API service
       - 127.0.0.1:4000:4000
+      # JSON-RPC API service
+      - 127.0.0.1:3500:3500
       # Beacon node connects to global P2P
       - 13000:13000/tcp
       # Beacon node connects to global P2P (secondary)

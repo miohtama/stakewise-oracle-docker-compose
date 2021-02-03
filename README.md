@@ -1,7 +1,7 @@
 
 Docker Compose for setting up [Stakewise Oracle](https://github.com/stakewise/oracle).
 
-- ETH1: Use free configured [Cloudflare Ethereum node](https://www.cloudflare.com/distributed-web-gateway/)
+- ETH1: Get a node from [QuikNode](https://www.quiknode.io/)
 
 - ETH2: Run Prysm and have all data in local `eth2` folder
 
@@ -23,48 +23,57 @@ wscat:
 npm install -g wscat
 ```
 
-### Oracle private key
+### Setting up secrets
 
-Generate [a private key](https://ethereum.stackexchange.com/q/82926/620):
+Generate [a private key](https://ethereum.stackexchange.com/q/82926/620).
 
-```sh
-# Stored outside the root folder to any accidental check ins
-openssl rand -hex 32 > ../private-key.txt
-```
+Get a Websock and HTTPS endpoint for an Ethereum 1 node.
 
-Configure your Web3 URL for ETH1:
+Create secrets.env
 
 ```sh
-echo "https://eth1.capitalgram.com" > web3.txt
+export ORACLE_PRIVATE_KEY=
+export WEB3_WS_ENDPOINT=
+export HTTP_WEB3_PROVIDER=
 ```
 ### Test ETH1 node connection
 
 Load configuration:
 
 ```sh
-source oracle-settings.env
+source secrets.env && source oracle-settings.env
 ```
 
-Connect Websocket:
+Test your ETH1 node API with curl:
 
 ```sh
-wscat -c ws://$WEB3_WS_ENDPOINT
+curl --location --request POST ${HTTP_WEB3_PROVIDER} \
+  --header 'Content-Type: application/json' \
+  --data-raw '{
+    "jsonrpc":"2.0",
+    "method":"eth_blockNumber",
+    "params":[],
+    "id":1
+  }'
 ```
 
-Test it with curl:
+You get a block number as hex in the reply:
+
+```
+{"jsonrpc":"2.0","id":1,"result":"0xb3cf53"}%
+```
+
+### Test Beacon node
+
+Test that Beacon node starts:
 
 ```sh
-curl --location --request POST '' \
---header 'Content-Type: application/json' \
---data-raw '{
-	"jsonrpc":"2.0",
-	"method":"eth_blockNumber",
-	"params":[],
-	"id":83
-}
+docker-compose up --build -V beacon
 ```
 
+# Notes
 
+- ETH1: Using a free [Cloudflare Ethereum node](https://www.cloudflare.com/distributed-web-gateway/) is [not possible](https://community.cloudflare.com/t/ethereum-getlogs-and-128-max-entries-limitation/241204)
 
 
 
