@@ -3,33 +3,73 @@ services:
 
   # Oracle connects to ETH1 and ETH2 nodes
   # oracle:
-  #  name: stakewise-oracle
-  #  image: stakewiselabs/oracle:latest
-  #  env_file:
-  #   - .oracle-settings.env
-  #  networks:
-  #    - internal
+  stakewise:
+    container_name: stakewise-oracle
+    image: stakewiselabs/oracle:v1.0.1
+    environment:
+      - ORACLE_PRIVATE_KEY
+      - WEB3_WS_ENDPOINT
+      - BEACON_CHAIN_RPC_ENDPOINT
+      - INJECT_STALE_CHECK_MIDDLEWARE
+      - STALE_CHECK_MIDDLEWARE_ALLOWABLE_DELAY
+      - INJECT_RETRY_REQUEST_MIDDLEWARE
+      - BALANCE_WARNING_THRESHOLD
+      - BALANCE_ERROR_THRESHOLD
+      - APPLY_GAS_PRICE_STRATEGY
+      - MAX_TX_WAIT_SECONDS
+      - TRANSACTION_TIMEOUT
+      - PROCESS_INTERVAL
+      - ORACLES_CONTRACT_ADDRESS
+      - POOL_CONTRACT_ADDRESS
+      - REWARD_ETH_CONTRACT_ADDRESS
+      - STAKED_ETH_CONTRACT_ADDRESS
+    # Do not start oracle service until beacon health check succeeds
+    depends_on:
+      beacon_ready:
+        condition: service_healthy
 
   # ETH2 self-hosted node that stores the data in $HOME/eth2
   # Based on https://github.com/stereum-dev/ethereum2-docker-compose/blob/master/compose-examples/prysm-only/docker-compose.yaml
   beacon:
     container_name: eth2-beacon
-    image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
+    # For shell use HEAD-9b367b-debug
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:HEAD-9b367b-debug
     restart: always
     hostname: beacon-chain
-    command: "--http-web3provider ${WEB3_WS_ENDPOINT} --config-file=/config/beacon.yml"
+    command: >
+      --http-web3provider ${WEB3_WS_ENDPOINT}
+      --config-file=/config/beacon.yml
     ports:
-      # gRPC API service
+      # gRPC API service exposed only to localhost
+      # - 127.0.0.1:4000:4000
       - 127.0.0.1:4000:4000
-      # JSON-RPC API service
+      # JSON-RPC API service exposed only to localhost
       - 127.0.0.1:3500:3500
       # Beacon node connects to global P2P
       - 13000:13000/tcp
       # Beacon node connects to global P2P (secondary)
       - 12000:12000/udp
     volumes:
+      # Mao our local config file to beacon
       - ./beacon.yml:/config/beacon.yml:ro
+      # Store beacon chain data locally and not within the container image
       - ./data:/data
+
+  # An external startup check tool for Prysm
+  # Using https://github.com/jwilder/dockerize
+  # Simply wait that TCP port of RPC becomes available before
+  # starting the Oracle to avoid errors on the startup.
+  beacon_ready:
+    image: jwilder/dockerize
+    container_name: eth2-beacon-ready
+    command: "/bin/sh -c 'while true ; do dockerize -wait tcp://beacon-chain:3500 -timeout 300s ; sleep 99 ; done'"
+    depends_on:
+      - beacon
+    healthcheck:
+      test: ["CMD", "dockerize", "-wait", "tcp://beacon-chain:3500"]
+      interval: 1s
+      retries: 999
+
 
   # Validator web UI is exposed at localhost:7500
   # validator:
@@ -45,10 +85,3 @@ services:
   #  volumes:
   #    - ./config/prysm/validator.yaml:/config/validator.yaml:ro
   #    - ./data/prysm/validator:/data
-
-networks:
-  external:
-    internal: false
-  internal:
-    internal: true
-

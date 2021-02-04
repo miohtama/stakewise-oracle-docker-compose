@@ -1,7 +1,6 @@
 # Settings for running Prysm beacon node for Stakewise Oracle
 
 accept-terms-of-use: yes
-
 datadir: /data
 
 #######################
@@ -9,8 +8,15 @@ datadir: /data
 # p2p-host-ip: ""
 # p2p-host-dns: ""
 
-rpc-host: 127.0.0.1
-monitoring-host: 127.0.0.1
+# Expose gRPC host outside Docker container
+rpc-host: 0.0.0.0
+rpc-port: 3500
+
+# Expose JSON-RPC host outside Docker container
+grpc-gateway-host: 0.0.0.0
+grpc-gateway-port: 4000
+
+# monitoring-host: 127.0.0.1
 
 # disable scan of local network
 p2p-denylist: ["10.0.0.0/8","172.16.0.0/12","192.168.0.0/16","100.64.0.0/10","169.254.0.0/16"]
@@ -20,9 +26,5 @@ p2p-tcp-port: 13000
 
 # enable db backup endpoint
 enable-db-backup-webhook: true
-
-##############################
-# Connection to geth container
-# http-web3provider: http://geth:8545
 
 blst: yes
