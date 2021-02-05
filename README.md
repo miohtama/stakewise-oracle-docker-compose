@@ -1,11 +1,13 @@
 
-Docker Compose for setting up [Stakewise Oracle](https://github.com/stakewise/oracle).
+Docker Compose for setting up [Oracle](https://github.com/stakewise/oracle) for [Stakewise pooled Ethereum 2 staking](https://capitalgram.com/posts/ethereum-2.0-staking-and-stakewise/).
+
+We have three services that communicate with each other
 
 - Ethereum 1: Get a hosted node from [QuikNode](https://www.quiknode.io/)
 
-- Ethereum 2: Run Prysm through Docker Compose and have all data in local `data` folder
+- Ethereum 2: Runs Prysm instance through Docker Compose and have all data in local `data` folder
 
-- Oracle: Run Docker Compose and use the image from Stakewise =
+- Oracle: Runs [stakewise/oracle](https://github.com/stakewise/oracle) image through Docker Compose
 
 # Prerequisites
 
@@ -23,7 +25,7 @@ wscat - needed for testing if Websocket connections work:
 npm install -g wscat
 ```
 
-### Setting up Telegram
+### Setting up Telegram bot
 
 Telegram group chat with an oracle specific bot is used to receive notifications on low balance and other errors.
 
@@ -39,11 +41,11 @@ You need a bot id and and a chat id. You can get there from Telegram [botfather]
 
 * Save chat id as `NOTIFIERS_TELEGRAM_CHAT_ID`
 
-### Setting up secrets
+### Setting up secrets file
 
-Generate [a private key](https://ethereum.stackexchange.com/q/82926/620).
+Generate [a private key for Ethereum 1](https://ethereum.stackexchange.com/q/82926/620).
 
-Send 0.1 ETH to your Oracle private key.
+Send 0.1 ETH to the address of your private key. You can do this later, as oracle will print out the address matching the private key on the startup.
 
 Create secrets.env
 
@@ -104,8 +106,22 @@ docker-compose up stakewise
 
 Start everything:
 
+```sh
+docker-compose up -d
 ```
+
+Check oracle is running:
+
+```sh
+docker logs oracle
 ```
+
+Check ETH2 beacon is running:
+
+```sh
+docker logs eth2-beacon
+```
+
 
 # Notes
 
