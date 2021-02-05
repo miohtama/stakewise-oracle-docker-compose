@@ -25,6 +25,8 @@ npm install -g wscat
 
 ### Setting up Telegram
 
+Telegram group chat with an oracle specific bot is used to receive notifications on low balance and other errors.
+
 You need a bot id and and a chat id. You can get there from Telegram [botfather](https://core.telegram.org/bots).
 
 * Create a bot - you get `NOTIFIERS_TELEGRAM_TOKEN`
