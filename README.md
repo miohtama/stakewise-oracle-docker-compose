@@ -23,17 +23,33 @@ wscat - needed for testing if Websocket connections work:
 npm install -g wscat
 ```
 
+### Setting up Telegram
+
+You need a bot id and and a chat id. You can get there from Telegram [botfather](https://core.telegram.org/bots).
+
+* Create a bot - you get `NOTIFIERS_TELEGRAM_TOKEN`
+
+* Create a groupt chat and invite your bot there
+
+* Type `/hello` in the group chat
+
+* Run `curl https://api.telegram.org/bot$NOTIFIERS_TELEGRAM_TOKEN/getUpdates | jq` to get a chat id
+
+* Save chat id as `NOTIFIERS_TELEGRAM_CHAT_ID`
+
 ### Setting up secrets
 
 Generate [a private key](https://ethereum.stackexchange.com/q/82926/620).
 
-Get a Websock and HTTPS endpoint for an Ethereum 1 node.
+Send 0.1 ETH to your Oracle private key.
 
 Create secrets.env
 
 ```sh
 export ORACLE_PRIVATE_KEY=111111111111...
 export HTTP_WEB3_PROVIDER=wss://misty-withered-violet.quiknode.pro/...
+export NOTIFIERS_TELEGRAM_TOKEN=
+export NOTIFIERS_TELEGRAM_CHAT_ID=
 ```
 ### Test ETH1 node connection
 
