@@ -23,6 +23,8 @@ services:
       - POOL_CONTRACT_ADDRESS
       - REWARD_ETH_CONTRACT_ADDRESS
       - STAKED_ETH_CONTRACT_ADDRESS
+      - NOTIFIERS_TELEGRAM_TOKEN
+      - NOTIFIERS_TELEGRAM_CHAT_ID
     # Do not start oracle service until beacon health check succeeds
     depends_on:
       beacon_ready:
