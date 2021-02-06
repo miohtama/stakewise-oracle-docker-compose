@@ -5,7 +5,7 @@ services:
   # oracle:
   stakewise:
     container_name: stakewise-oracle
-    image: stakewiselabs/oracle:v1.0.1
+    image: stakewiselabs/oracle:v1.0.2
     environment:
       - ORACLE_PRIVATE_KEY
       - WEB3_WS_ENDPOINT
@@ -71,17 +71,3 @@ services:
       retries: 999
 
 
-  # Validator web UI is exposed at localhost:7500
-  # validator:
-  #  container_name: eth2-validator
-  #  image: gcr.io/prysmaticlabs/prysm/validator:latest
-  #  restart: on-failure
-  #  hostname: validator
-  #  depends_on:
-  #    - beacon
-  #  command: --config-file=/config/validator.yaml
-  #  ports:
-  #    - 127.0.0.1:7500:7500/tcp # web-ui
-  #  volumes:
-  #    - ./config/prysm/validator.yaml:/config/validator.yaml:ro
-  #    - ./data/prysm/validator:/data
