@@ -66,7 +66,7 @@ services:
     container_name: eth2-beacon-ready
     command: "/bin/sh -c 'while true ; do dockerize -wait tcp://beacon-chain:3500 -timeout 300s ; sleep 99 ; done'"
     depends_on:
-      - beacon
+      - eth2-beacon
     healthcheck:
       test: ["CMD", "dockerize", "-wait", "tcp://beacon-chain:3500"]
       interval: 1s
