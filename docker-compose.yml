@@ -27,7 +27,7 @@ services:
       - NOTIFIERS_TELEGRAM_CHAT_ID
     # Do not start oracle service until beacon health check succeeds
     depends_on:
-      beacon_ready:
+      eth2-beacon-ready:
         condition: service_healthy
 
   # ETH2 self-hosted node that stores the data in $HOME/eth2
