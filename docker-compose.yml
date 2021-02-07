@@ -3,7 +3,7 @@ services:
 
   # Oracle connects to ETH1 and ETH2 nodes
   # oracle:
-  stakewise:
+  stakewise-oracle:
     container_name: stakewise-oracle
     image: stakewiselabs/oracle:v1.0.2
     environment:
@@ -32,7 +32,7 @@ services:
 
   # ETH2 self-hosted node that stores the data in $HOME/eth2
   # Based on https://github.com/stereum-dev/ethereum2-docker-compose/blob/master/compose-examples/prysm-only/docker-compose.yaml
-  beacon:
+  eth2-beacon:
     container_name: eth2-beacon
     # For shell use HEAD-9b367b-debug
     image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
@@ -61,7 +61,7 @@ services:
   # Using https://github.com/jwilder/dockerize
   # Simply wait that TCP port of RPC becomes available before
   # starting the Oracle to avoid errors on the startup.
-  beacon_ready:
+  eth2-beacon-ready:
     image: jwilder/dockerize
     container_name: eth2-beacon-ready
     command: "/bin/sh -c 'while true ; do dockerize -wait tcp://beacon-chain:3500 -timeout 300s ; sleep 99 ; done'"
