@@ -35,7 +35,7 @@ services:
   beacon:
     container_name: eth2-beacon
     # For shell use HEAD-9b367b-debug
-    image: gcr.io/prysmaticlabs/prysm/beacon-chain:HEAD-9b367b-debug
+    image: gcr.io/prysmaticlabs/prysm/beacon-chain:latest
     restart: always
     hostname: beacon-chain
     command: >
