@@ -5,7 +5,7 @@ services:
   # oracle:
   stakewise-oracle:
     container_name: stakewise-oracle
-    image: stakewiselabs/oracle:v1.0.2
+    image: stakewiselabs/oracle:v1.0.3
     environment:
       - ORACLE_PRIVATE_KEY
       - WEB3_WS_ENDPOINT
@@ -25,6 +25,7 @@ services:
       - STAKED_ETH_CONTRACT_ADDRESS
       - NOTIFIERS_TELEGRAM_TOKEN
       - NOTIFIERS_TELEGRAM_CHAT_ID
+      - WEB3_WS_ENDPOINT_TIMEOUT
     # Do not start oracle service until beacon health check succeeds
     depends_on:
       eth2-beacon-ready:
@@ -56,20 +57,5 @@ services:
       - ./beacon.yml:/config/beacon.yml:ro
       # Store beacon chain data locally and not within the container image
       - ./data:/data
-
-  # An external startup check tool for Prysm
-  # Using https://github.com/jwilder/dockerize
-  # Simply wait that TCP port of RPC becomes available before
-  # starting the Oracle to avoid errors on the startup.
-  eth2-beacon-ready:
-    image: jwilder/dockerize
-    container_name: eth2-beacon-ready
-    command: "/bin/sh -c 'while true ; do dockerize -wait tcp://beacon-chain:3500 -timeout 300s ; sleep 99 ; done'"
-    depends_on:
-      - eth2-beacon
-    healthcheck:
-      test: ["CMD", "dockerize", "-wait", "tcp://beacon-chain:3500"]
-      interval: 1s
-      retries: 999
 
 
