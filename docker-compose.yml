@@ -26,10 +26,6 @@ services:
       - NOTIFIERS_TELEGRAM_TOKEN
       - NOTIFIERS_TELEGRAM_CHAT_ID
       - WEB3_WS_ENDPOINT_TIMEOUT
-    # Do not start oracle service until beacon health check succeeds
-    depends_on:
-      eth2-beacon-ready:
-        condition: service_healthy
 
   # ETH2 self-hosted node that stores the data in $HOME/eth2
   # Based on https://github.com/stereum-dev/ethereum2-docker-compose/blob/master/compose-examples/prysm-only/docker-compose.yaml
