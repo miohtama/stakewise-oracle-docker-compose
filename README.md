@@ -52,8 +52,16 @@ Create secrets.env
 ```sh
 export ORACLE_PRIVATE_KEY=111111111111...
 export HTTP_WEB3_PROVIDER=wss://misty-withered-violet.quiknode.pro/...
+export BEACON_WEB3_WS_ENDPOINT=
 export NOTIFIERS_TELEGRAM_TOKEN=
 export NOTIFIERS_TELEGRAM_CHAT_ID=
+
+# For Prysm to sync with eth1
+export BEACON_WEB3_WS_ENDPOINT=
+
+# Either or for the oracle
+export WEB3_WS_ENDPOINT=
+export WEB3_HTTP_ENDPOINT=
 ```
 ### Test ETH1 node connection
 

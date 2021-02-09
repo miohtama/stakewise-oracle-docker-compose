@@ -37,7 +37,7 @@ services:
     restart: always
     hostname: beacon-chain
     command: >
-      --http-web3provider ${WEB3_WS_ENDPOINT}
+      --http-web3provider ${BEACON_WEB3_WS_ENDPOINT}
       --config-file=/config/beacon.yml
     ports:
       # gRPC API service exposed only to localhost
