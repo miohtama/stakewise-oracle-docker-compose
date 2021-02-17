@@ -5,7 +5,7 @@ services:
   # oracle:
   stakewise-oracle:
     container_name: stakewise-oracle
-    image: stakewiselabs/oracle:v1.0.3
+    image: stakewiselabs/oracle:v1.0.5
     environment:
       - ORACLE_PRIVATE_KEY
       - WEB3_WS_ENDPOINT
