@@ -5,7 +5,7 @@ services:
   # oracle:
   stakewise-oracle:
     container_name: stakewise-oracle
-    image: stakewiselabs/oracle:v1.0.5
+    image: stakewiselabs/oracle:v1.1.1
     environment:
       - ORACLE_PRIVATE_KEY
       - WEB3_WS_ENDPOINT
@@ -27,6 +27,7 @@ services:
       - NOTIFIERS_TELEGRAM_TOKEN
       - NOTIFIERS_TELEGRAM_CHAT_ID
       - WEB3_WS_ENDPOINT_TIMEOUT
+      - ORACLE_VOTE_GAS_LIMIT
 
   # ETH2 self-hosted node that stores the data in $HOME/eth2
   # Based on https://github.com/stereum-dev/ethereum2-docker-compose/blob/master/compose-examples/prysm-only/docker-compose.yaml
